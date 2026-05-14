@@ -1,13 +1,13 @@
 let extract k list =
-  let rec aux acc item list2 = match list2, item with
-  | [], _ when List.length item = k -> List.rev item :: acc
-  | [], _ -> acc
-  | h :: t, _ :: rest_item when List.length item = k -> aux (List.rev item :: acc) rest_item t
-  | h :: t, _ :: rest_item -> aux acc rest_item t @ aux acc item t @ aux acc (h::item) t
-  | h :: t, [] -> aux acc item t @ aux acc (h::item) t
+  let rec aux item = function
+    | _ when List.length item = k -> [List.rev item]
+    | [] -> []
+    | h :: t ->
+      let with_h = aux (h::item) t in
+      let without_h = aux item t in
+      with_h @ without_h
   in
-  List.rev (aux [] [] list)
-  
+  aux [] list
 
 let () =
   assert (extract 2 [] = []);
